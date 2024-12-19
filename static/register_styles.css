@@ -1,0 +1,30 @@
+
+.flash-messages {
+    margin-top: 20px;
+}
+
+.flash-message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.flash-message.info {
+    background-color: #e0f0ff;
+    border: 1px solid #b8daff;
+}
+
+.flash-message.warning {
+    background-color: #fff8e1;
+    border: 1px solid #ffdb70;
+}
+
+.flash-message.danger {
+    background-color: #ffe0e0;
+    border: 1px solid #ffbdbd;
+}
+
+.flash-message.success {
+    background-color: #e0ffe0;
+    border: 1px solid #b8ffb8;
+}

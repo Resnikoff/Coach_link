@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calorie Counter</title>
+</head>
+
+<body>
+    
+    <h3>Your Macros for Today</h3>
+    <p>Calories: <span id="total_calories">{{ total_calories }}kcal</span></p>
+    <p>Carbs: <span id="total_carbs">{{ total_carbs }}g</span></p>
+    <p>Protein: <span id="total_protein">{{ total_protein }}g</p>
+    <p>Fats: <span id="total_fats">{{ total_fats }}g</span></p>
+    
+    <h3>Daily Food Intake</h3>
+    <ul>
+        {% for food in daily_foods %}
+            <li>
+                <strong>Name:</strong> {{ food[0] }},
+                <strong>Calories:</strong> {{ food[1] }},
+                <strong>Carbs:</strong> {{ food[2] }}g,
+                <strong>Protein:</strong> {{ food[3] }}g,
+                <strong>Fats:</strong> {{ food[4] }}g,
+                <!-- Add form for removing the food entry -->
+                <form action="/remove_food" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="{{ food[5] }}"> <!-- Assuming the ID is at index 0 -->
+                    <input type="submit" value="Remove">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+      
+
+
+
+<h3>Search for Foods</h3>
+<form action="/search_food" method="post">
+    <input type="text" name="food_query" placeholder="Enter food name...">
+    <input type="submit" value="Search">
+</form>
+
+<div id="search_results">
+    {% if foods %}
+        <ul>
+            {% for food in foods %}
+                <li>
+                    {{ food.description }} - 
+                    {% for nutrient in food.foodNutrients %}
+                        {% if nutrient.nutrientName == "Energy" %}
+                            {{ nutrient.value }} {{ nutrient.unitName }},
+                        {% elif nutrient.nutrientName == "Protein" %}
+                            {{ nutrient.value }} {{ nutrient.unitName }} Protein,
+                        {% elif nutrient.nutrientName == "Carbohydrate, by difference" %}
+                            {{ nutrient.value }} {{ nutrient.unitName }} Carbs,
+                        {% elif nutrient.nutrientName == "Total lipid (fat)" %}
+                            {{ nutrient.value }} {{ nutrient.unitName }} Fat
+                        {% endif %}
+                    {% endfor %}
+                    <form action="/add_food" method="post">
+                        <input type="hidden" name="food_name" value="{{ food.description }}">
+                        <!-- Adjust the indices or use a different method to get the correct nutrient values if needed -->
+                        <input type="hidden" name="calories" value="{{ food.foodNutrients[3].value }}">
+                        <input type="hidden" name="protein" value="{{ food.foodNutrients[0].value }}">
+                        <input type="hidden" name="carbs" value="{{ food.foodNutrients[2].value }}">
+                        <input type="hidden" name="fats" value="{{ food.foodNutrients[1].value }}">
+                        <input type="submit" value="Add to Intake">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No search results found.</p>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('athlete_dashboard') }}">Return to Dashboard</a>
+
+</body>
+
+</html>

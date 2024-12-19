@@ -1,0 +1,119 @@
+<h3>Your Auth Code:</h3>
+<p>{{ athlete.auth_code }}</p>
+
+<h2>Welcome, {{ athlete.username }}!</h2>
+
+<a href="/calorie_counter" class="btn btn-primary">Go to Calorie Counter</a>
+
+<h3>Your Calorie & Macro Overview</h3>
+<h4>Total Calories Today: <span id="totalCalories">{{ total_calories }}/{{ athlete.calorie_goal }}kcal</span></h4>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<div id="macroPieChart" style="width: 400px; height: 300px;"></div>
+
+<script type="text/javascript">
+    // Load the Visualization API and the corechart package.
+   
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    google.charts.load('current', {'packages':['corechart'], 'callback': drawChart});
+
+    // Create and draw the pie chart.
+    function drawChart() {
+        // Create the data table with macro data.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Macronutrient');
+        data.addColumn('number', 'Grams');
+        data.addRows([
+            ['Carbs', parseInt('{{ total_carbs }}')],
+            ['Protein', parseInt('{{ total_protein }}')],
+            ['Fat', parseInt('{{ total_fats }}')]
+        ]);
+
+
+        // Set chart options
+        var options = {'title':'Macronutrient Distribution',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw the pie chart.
+        var chart = new google.visualization.PieChart(document.getElementById('macroPieChart'));
+        chart.draw(data, options);
+    }
+</script>
+
+<form action="/add_weight" method="post" enctype="multipart/form-data">
+    Date: <input type="date" name="date" value="{{ today }}">
+    Weight(Kg): <input type="number" name="weight" step="0.1" required>
+    Image: <input type="file" name="image">
+    <input type="submit" value="Submit">
+</form>
+
+<!-- Load the Google Charts library -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<!-- Create a div to hold the chart. This replaces the <canvas> tag -->
+<div id="weightChart" style="width: 100%; height: 500px;"></div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+        
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var weightData = JSON.parse('{{ athlete_weight_data|tojson|safe }}');
+            
+            // Convert your data to Google Charts format
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Date');
+            data.addColumn('number', 'Weight (kg)');
+            
+            for (var i = 0; i < weightData.length; i++) {
+                var date = new Date(weightData[i].x);
+                var formattedDate = date.toLocaleString('default', { month: 'short' }) + date.getDate();
+                data.addRow([formattedDate, weightData[i].y]);
+            }
+                    
+            // Set chart options
+            var options = {
+                title: 'Weight Log',
+                hAxis: {
+                    title: 'Date',
+                    slantedText: true,
+                    slantedTextAngle: 45, 
+                    showTextEvery: 1
+                },
+                vAxis: {
+                    title: 'Weight (kg)',
+                    viewWindow: {
+                        min: 0,
+                        max: 120
+                    }
+                },
+                legend: 'none',
+                pointSize: 5
+            };
+
+            // Create and draw the chart
+            var chart = new google.visualization.ScatterChart(document.getElementById('weightChart'));
+            chart.draw(data, options);
+        }
+    });
+</script>
+
+<div class="section">
+    <h3>Manage Your Weight Logs</h3>
+    <p>
+        <a href="/weight_log">View and Manage Weight Logs</a>
+    </p>
+</div>
+
+<a href="/login" class="button">Logout</a>

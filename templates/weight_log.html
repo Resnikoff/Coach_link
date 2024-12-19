@@ -1,0 +1,40 @@
+<h2>Weight Logs</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Weight (kg)</th>
+            <th>Image</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log[1] }}</td> <!-- Date -->
+            <td>{{ log[2] }}</td> <!-- Weight -->
+            <td>
+                {% if log[3] %}
+                <!-- Preview the image -->
+                <a href="{{ url_for('static', filename='uploads/' + log[3].split('/')[-1]) }}" target="_blank">
+                    <img src="{{ url_for('static', filename='uploads/' + log[3].split('/')[-1]) }}" alt="Weight Log Image" width="100">
+                </a>                
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>
+                <!-- Remove a log -->
+                <form method="post" action="{{ url_for('weight_log') }}">
+                    <input type="hidden" name="remove_log" value="{{ log[0] }}">
+                    <input type="submit" value="Remove">
+                </form>
+            </td>
+        </tr>
+        
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('athlete_dashboard') }}">Return to Dashboard</a>

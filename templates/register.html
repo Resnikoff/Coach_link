@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Register</h2>
+    <form action="/register" method="post">
+        <label for="role">I am a:</label>
+        <select name="role">
+            <option value="coach">Coach</option>
+            <option value="athlete">Athlete</option>
+        </select>
+        <br><br>
+
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+        <br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required placeholder="example@example.com">
+        <br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <br><br>
+
+        <input type="submit" value="Register">
+    </form>
+    <br><br>
+    <a href="{{ url_for('login') }}"><button type="button">Login here</button></a>
+</body>
+</html>

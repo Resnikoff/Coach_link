@@ -1,0 +1,17 @@
+Ensure you have the following libraries installed: 
+- Flask
+- os
+- sqlite3
+- functools
+- hashlib
+- time
+- datetime
+- mailjet_rest
+- werkzeug.utils
+- string, random
+- requests
+
+How to run:
+On the terminal, navigate to IA_FLASK folder
+
+CHECK ON SCHOOL EMAIL THE DOCUMENT ON HOW TO RUN, IA COVER DOCUMENT something

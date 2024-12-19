@@ -1,0 +1,54 @@
+<h2>Coach Dashboard</h2>
+
+<h3>Add Athlete</h3>
+<form action="{{ url_for('coach_dashboard') }}" method="POST">
+    <div class="form-group">
+        <label for="authCode">Athlete's Authentication Code:</label>
+        <input type="text" name="auth_code" id="authCode" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Athlete</button>
+</form>
+
+{% if message %}
+<p class="alert">{{ message }}</p>
+{% endif %}
+
+<!-- Display Athlete's Progress -->
+<table>
+    <thead>
+        <tr>
+            <th> Athlete Name </th>
+            <th> Total Calories </th>
+            <th> Calorie Goal </th>
+            <th> Total Carbs </th>
+            <th> Total Protein </th>
+            <th> Total Fats </th>
+            <th> Update Calorie Goal </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for athlete in athletes %}
+        <tr>
+            <td>{{ athlete.username }}</td>
+            <td>{{ athlete.total_calories }}</td>
+            <td>{{ athlete.calorie_goal }}</td> <!-- Display the current calorie goal -->
+            <td>{{ athlete.total_carbs }}g</td>
+            <td>{{ athlete.total_protein }}g</td>
+            <td>{{ athlete.total_fats }}g</td>
+            <td>
+                <form action="{{ url_for('update_calorie_goal') }}" method="post">
+                    <input type="hidden" name="athlete_id" value="{{ athlete.id }}">
+                    <input type="number" name="calorie_goal" placeholder="New Calorie Goal">
+                    <input type="submit" value="Update">
+                </form>
+            </td>
+            <td>
+                <!-- Link to view the athlete's weight logs -->
+                <a href="{{ url_for('coach_view_weight_log', athlete_id=athlete.id) }}">View Weight Logs</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/login" class="button">Logout</a>
